@@ -121,10 +121,36 @@ class DutySystem {
     this.timeTable = [];
   }
 
-  createWorkTimeTable() {}
+  createWorkTimeTable() {
+    let weekdayWorkerCount = 0;
+    let weekendWorkerCount = 0;
+
+    for (let i = 0; i < this.systemCalendar.length; i++) {
+      const holiday = this.systemCalendar[i].isHoliday;
+      console.log(!holiday);
+
+      //주말이나 공휴일 경우
+      if (holiday) {
+        this.timeTable.push({
+          ...this.systemCalendar[i],
+          worker: this.weekendWorkerNameArray[weekendWorkerCount % this.weekendWorkerNameArray.length],
+        });
+        weekendWorkerCount += 1;
+      }
+      //평일인경우
+      else {
+        this.timeTable.push({
+          ...this.systemCalendar[i],
+          worker: this.weekdayWorkerNameArray[weekdayWorkerCount % this.weekdayWorkerNameArray.length],
+        });
+        weekdayWorkerCount += 1;
+      }
+    }
+  }
 
   getProperty() {
     console.log(this.systemCalendar, this.weekdayWorkerNameArray, this.weekendWorkerNameArray);
+    console.log(this.timeTable);
   }
 }
 
@@ -177,7 +203,8 @@ class App {
     console.log(`weekendWorkerNameArray ${weekendWorkerNameArray}`);
 
     const dutySystem = new DutySystem(calendar.getCalendarInfo(), weekdayWorkerNameArray, weekendWorkerNameArray);
-    // dutySystem.getProperty();
+    dutySystem.createWorkTimeTable();
+    dutySystem.getProperty();
   }
 }
 
