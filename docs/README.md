@@ -40,6 +40,9 @@
     -> 최종 근무표
 4. 평일이면서 법정공휴일의 경우에만 요일 뒤에 (휴일) 표기를 해야 한다.
 - 비상 근무표 출력을 완료하면 프로그램은 종료된다.
+-> 입력받은 데이터는 배열에 각 원소는 date,days,isHoliday,worker 속성 포함된 배열  + month
+-> if 평일인데  휴일일 경우 휴일표시
+-> else 노말출력 형식 ${month} ${timeTable.date}일 ${timeTable.days} ${timeTable.worker}
 ```
 5월 1일 월 준팍
 5월 2일 화 도밥
