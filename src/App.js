@@ -127,7 +127,6 @@ class DutySystem {
 
     for (let i = 0; i < this.systemCalendar.length; i++) {
       const holiday = this.systemCalendar[i].isHoliday;
-      console.log(!holiday);
 
       //주말이나 공휴일 경우
       if (holiday) {
@@ -148,8 +147,20 @@ class DutySystem {
     }
   }
 
+  modifyDoubleWork() {
+    for (let i = 1; i < this.timeTable.length; i++) {
+      // 연속 근무일 경우
+      if (this.timeTable[i].worker === this.timeTable[i - 1].worker) {
+        const modifiedToday = { ...this.timeTable[i], worker: this.timeTable[i + 1].worker };
+        const modifiedTomorrow = { ...this.timeTable[i + 1], worker: this.timeTable[i].worker };
+        this.timeTable[i] = modifiedToday;
+        this.timeTable[i + 1] = modifiedTomorrow;
+      }
+    }
+  }
+
   getProperty() {
-    console.log(this.systemCalendar, this.weekdayWorkerNameArray, this.weekendWorkerNameArray);
+    // console.log(this.systemCalendar, this.weekdayWorkerNameArray, this.weekendWorkerNameArray);
     console.log(this.timeTable);
   }
 }
@@ -204,6 +215,10 @@ class App {
 
     const dutySystem = new DutySystem(calendar.getCalendarInfo(), weekdayWorkerNameArray, weekendWorkerNameArray);
     dutySystem.createWorkTimeTable();
+    dutySystem.getProperty();
+
+    console.log(`after duplicate check`);
+    dutySystem.modifyDoubleWork();
     dutySystem.getProperty();
   }
 }
