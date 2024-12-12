@@ -113,7 +113,20 @@ const HOLIDAYS = [
   [12, 25],
 ];
 
-class DutySystem {}
+class DutySystem {
+  constructor(calendar, weekdayWorkerNameArray, weekendWorkerNameArray) {
+    this.systemCalendar = calendar;
+    this.weekdayWorkerNameArray = weekdayWorkerNameArray;
+    this.weekendWorkerNameArray = weekendWorkerNameArray;
+    this.timeTable = [];
+  }
+
+  createWorkTimeTable() {}
+
+  getProperty() {
+    console.log(this.systemCalendar, this.weekdayWorkerNameArray, this.weekendWorkerNameArray);
+  }
+}
 
 const MONTHS_PAIR = { 1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31 };
 class Calendar {
@@ -148,9 +161,8 @@ class Calendar {
     return false;
   }
 
-  getAllProperty() {
-    console.log(this.calendarInfo);
-    console.log(`${this.currentMonth}, ${this.startDay}요일, 월말 ${this.endOfDay}`);
+  getCalendarInfo() {
+    return this.calendarInfo;
   }
 }
 class App {
@@ -163,6 +175,9 @@ class App {
     const [weekdayWorkerNameArray, weekendWorkerNameArray] = await InputView.readWokerName();
     console.log(`weekdayWorkerNameArray ${weekdayWorkerNameArray} ${Array.isArray(weekdayWorkerNameArray)}`);
     console.log(`weekendWorkerNameArray ${weekendWorkerNameArray}`);
+
+    const dutySystem = new DutySystem(calendar.getCalendarInfo(), weekdayWorkerNameArray, weekendWorkerNameArray);
+    // dutySystem.getProperty();
   }
 }
 
