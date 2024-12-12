@@ -9,6 +9,27 @@ class Validator {
       throw new Error(MESSAGES_ERROR['INPUT']);
     }
   }
+
+  static formatWorkers(workers) {
+    const workerNameAraary = workers.split(',');
+
+    // 이름 중복 케이스
+    if (workerNameAraary.length !== new Set(workerNameAraary).size) {
+      throw new Error(MESSAGES_ERROR['WORKER']);
+    }
+
+    // 최소 1글자 최대 5글자
+    for (const workerName of workerNameAraary) {
+      if (workerName.length < 1 || workerName.length > 5) {
+        throw new Error(MESSAGES_ERROR['WORKER']);
+      }
+    }
+
+    // 최소5명, 최대 5명
+    if (workerNameAraary.length < 5 || workerNameAraary.length > 35) {
+      throw new Error(MESSAGES_ERROR['WORKER']);
+    }
+  }
   formatArray(arr) {
     // 배열줄 한 원소라도 특정값 초과시
     if (arr.some((num) => num > 100)) {
@@ -38,10 +59,13 @@ class Validator {
 
 const MESSAGES_INPUT = {
   START: '비상 근무를 배정할 월과 시작 요일을 입력하세요> ',
+  WEEKDAY_WORKER: `평일 비상 근무 순번대로 사원 닉네임을 입력하세요> `,
+  WEEKEND_WORKER: '휴일 비상 근무 순번대로 사원 닉네임을 입력하세요> ',
 };
 
 const MESSAGES_ERROR = {
   INPUT: '[ERROR] 유효하지 않은 입력 값입니다. 다시 입력해 주세요.',
+  WORKER: `[ERROR] 유효하지 않은 입력 값입니다. 다시 입력해 주세요.`,
 };
 
 export const InputView = {
@@ -54,7 +78,24 @@ export const InputView = {
         const [month, nDay] = requestValue.split(',');
         return [month, nDay];
       } catch (error) {
-        Console.print(MESSAGES_ERROR['INPUT']);
+        Console.print(error.message);
+      }
+    }
+  },
+
+  async readWokerName() {
+    while (true) {
+      try {
+        const weekdayValue = await Console.readLineAsync(MESSAGES_INPUT['WEEKDAY_WORKER']);
+        const weekendValue = await Console.readLineAsync(MESSAGES_INPUT['WEEKEND_WORKER']);
+
+        Validator.formatWorkers(weekdayValue);
+        Validator.formatWorkers(weekendValue);
+
+        const [month, nDay] = requestValue.split(',');
+        return [month, nDay];
+      } catch (error) {
+        Console.print(error.message);
       }
     }
   },
@@ -116,7 +157,9 @@ class App {
     const [month, nDay] = await InputView.readInput();
     const calendar = new Calendar(month, nDay);
     calendar.initialize();
-    calendar.getAllProperty();
+
+    // 근무자 입력받기
+    const a = await InputView.readWokerName();
   }
 }
 
