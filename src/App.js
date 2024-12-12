@@ -10,9 +10,7 @@ class Validator {
     }
   }
 
-  static formatWorkers(workers) {
-    const workerNameAraary = workers.split(',');
-
+  static formatWorkers(workerNameAraary) {
     // 이름 중복 케이스
     if (workerNameAraary.length !== new Set(workerNameAraary).size) {
       throw new Error(MESSAGES_ERROR['WORKER']);
@@ -88,12 +86,13 @@ export const InputView = {
       try {
         const weekdayValue = await Console.readLineAsync(MESSAGES_INPUT['WEEKDAY_WORKER']);
         const weekendValue = await Console.readLineAsync(MESSAGES_INPUT['WEEKEND_WORKER']);
+        const weekdayWorkerNameArray = weekdayValue.split(',');
+        const weekendWorkerNameArray = weekendValue.split(',');
 
-        Validator.formatWorkers(weekdayValue);
-        Validator.formatWorkers(weekendValue);
+        Validator.formatWorkers(weekdayWorkerNameArray);
+        Validator.formatWorkers(weekendWorkerNameArray);
 
-        const [month, nDay] = requestValue.split(',');
-        return [month, nDay];
+        return [weekdayWorkerNameArray, weekendWorkerNameArray];
       } catch (error) {
         Console.print(error.message);
       }
@@ -113,6 +112,8 @@ const HOLIDAYS = [
   [10, 9],
   [12, 25],
 ];
+
+class DutySystem {}
 
 const MONTHS_PAIR = { 1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31 };
 class Calendar {
@@ -159,7 +160,9 @@ class App {
     calendar.initialize();
 
     // 근무자 입력받기
-    const a = await InputView.readWokerName();
+    const [weekdayWorkerNameArray, weekendWorkerNameArray] = await InputView.readWokerName();
+    console.log(`weekdayWorkerNameArray ${weekdayWorkerNameArray} ${Array.isArray(weekdayWorkerNameArray)}`);
+    console.log(`weekendWorkerNameArray ${weekendWorkerNameArray}`);
   }
 }
 
